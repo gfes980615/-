@@ -11,7 +11,30 @@ namespace web_class1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            clientDetailView.DataBind();
+        }
 
+        protected void DetailsView1_PageIndexChanging(object sender, DetailsViewPageEventArgs e)
+        {
+
+        }
+
+        protected void login_Click(object sender, EventArgs e)
+        {
+            clientDetailView.Visible = false;
+            entry.Visible = false;
+            if(clientDetailView.DataItemCount == 1)
+            {
+                Session["name"] = clientDetailView.Rows[0].Cells[0].Text;
+                Session["money"] = clientDetailView.Rows[1].Cells[0].Text;
+                entry.Visible = true;
+            }
+            else
+            {
+                Session["name"] = null;
+                Session["name"] = null;
+                clientDetailView.Visible = true;
+            }
         }
     }
 }

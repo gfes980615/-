@@ -129,6 +129,10 @@
     <Content Include="1310814177-15a8c84ce891733ea87a24be059620c3.jpg" />
     <Content Include="4eRxg.jpg" />
     <Content Include="About.aspx" />
+    <Content Include="App_Data\clientData.mdf" />
+    <Content Include="App_Data\clientData_log.ldf">
+      <DependentUpon>clientData.mdf</DependentUpon>
+    </Content>
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -229,9 +233,7 @@
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
