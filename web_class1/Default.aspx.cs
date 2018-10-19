@@ -25,8 +25,8 @@ namespace web_class1
             entry.Visible = false;
             if(clientDetailView.DataItemCount == 1)
             {
-                Session["name"] = clientDetailView.Rows[0].Cells[0].Text;
-                Session["money"] = clientDetailView.Rows[1].Cells[0].Text;
+                Session["name"] = clientDetailView.Rows[0].Cells[1].Text;
+                Session["money"] = clientDetailView.Rows[1].Cells[1].Text;
                 entry.Visible = true;
             }
             else

@@ -60,7 +60,7 @@
                 <tr>
                     <td class="auto-style13">
                         <asp:Button ID="login" runat="server" Text="登入" OnClick="login_Click" />
-                        <asp:LinkButton ID="entry" runat="server" Visible="False">進入商店</asp:LinkButton>
+                        <asp:LinkButton ID="entry" runat="server" Visible="False" PostBackUrl="~/Store.aspx">進入商店</asp:LinkButton>
                     </td>
                 </tr>
 
