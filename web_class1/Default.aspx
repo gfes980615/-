@@ -69,9 +69,10 @@
                 <Fields>
                     <asp:BoundField DataField="user_name" HeaderText="user_name" SortExpression="user_name" />
                     <asp:BoundField DataField="user_money" HeaderText="user_money" SortExpression="user_money" />
+                    <asp:BoundField DataField="user_phone" HeaderText="user_phone" SortExpression="user_phone" />
                 </Fields>
             </asp:DetailsView>
-            <asp:SqlDataSource ID="clientDetail" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [user_name], [user_money] FROM [userData] WHERE (([user_name] = @user_name) AND ([user_passward] = @user_passward))">
+            <asp:SqlDataSource ID="clientDetail" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT user_name, user_money, user_phone FROM userData WHERE (user_name = @user_name) AND (user_passward = @user_passward)">
                 <SelectParameters>
                     <asp:ControlParameter ControlID="accountB" Name="user_name" PropertyName="Text" Type="String" />
                     <asp:ControlParameter ControlID="passwardB" Name="user_passward" PropertyName="Text" Type="String" />

@@ -26,6 +26,9 @@
         .auto-style5 {
             height: 26px;
         }
+        .auto-style6 {
+            width: 100%;
+        }
     </style>
 </head>
 <body style="background-position: center center; background-image: url('4eRxg.jpg'); background-repeat: no-repeat; background-attachment: fixed;background-size: cover;">
@@ -56,8 +59,26 @@
                 <td class="auto-style4"></td>
             </tr>
         </table>
+        <table class="auto-style6">
+            <tr>
+                <td>
+                    <asp:Button ID="orderBT" runat="server" OnClick="orderBT_Click" Text="前往訂購" />
+                    <asp:Button ID="reTB" runat="server" OnClick="reTB_Click" Text="重建表單" />
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+        <br />
+        <br />
         <asp:SqlDataSource ID="drinkData" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [drink_id], [drink_name] FROM [drinkTable]"></asp:SqlDataSource>
-        <asp:SqlDataSource ID="drinkDataSelect" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [drink_price], [drink_number] FROM [drinkTable] WHERE ([drink_id] = @drink_id)">
+        <asp:SqlDataSource ID="drinkDataSelect" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" InsertCommand="INSERT INTO orderTable(order_time, order_phone) VALUES (GETDATE(), @order_phone)" SelectCommand="SELECT [drink_price], [drink_number] FROM [drinkTable] WHERE ([drink_id] = @drink_id)">
+            <InsertParameters>
+                <asp:SessionParameter Name="order_phone" SessionField="phone" />
+            </InsertParameters>
             <SelectParameters>
                 <asp:ControlParameter ControlID="drinkList" Name="drink_id" PropertyName="SelectedValue" Type="Int32" />
             </SelectParameters>

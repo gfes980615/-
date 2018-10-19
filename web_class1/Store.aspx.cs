@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using System.Data.SqlClient;
 namespace web_class1
 {
     public partial class Store : System.Web.UI.Page
@@ -31,6 +31,33 @@ namespace web_class1
                 drinkPrice.Text = drinkDetailsView.Rows[0].Cells[1].Text + " 元";
                 drinkNumber.Text = "\t庫存: " + drinkDetailsView.Rows[1].Cells[1].Text +" 個";
             }
+        }
+
+        protected void orderBT_Click(object sender, EventArgs e)
+        {
+            drinkDataSelect.Insert();
+
+            SqlConnection orderCon = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\clientData.mdf;Integrated Security=True");
+            orderCon.Open();
+            SqlCommand orderCmd = new SqlCommand("select top 1 order_id from [orderTable] order by order_id Desc", orderCon);
+            SqlDataReader orderDr;
+            orderDr = orderCmd.ExecuteReader();
+            if (orderDr.Read())
+            {
+                Session["order_id"] = orderDr["order_id"]; 
+                orderBT.Text = orderDr["order_id"] + "號訂單";
+               // orderBT.Enabled = false;
+            }
+
+        }
+
+        protected void reTB_Click(object sender, EventArgs e)
+        {
+            SqlConnection orderCon = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\clientData.mdf;Integrated Security=True");
+            orderCon.Open();
+            SqlCommand orderTableTurncateCmd = new SqlCommand("truncate table orderTable", orderCon);
+            orderTableTurncateCmd.ExecuteNonQuery();
+            orderBT.Text = "前往訂購";
         }
     }
 }
