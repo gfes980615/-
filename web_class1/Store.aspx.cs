@@ -13,9 +13,18 @@ namespace web_class1
         {
             drinkDetailsView.DataBind();
             userShowLB.Text = Session["name"] + "歡迎光臨<br>你的餘額剩" + Session["money"];
-            drinkPrice.Text = "";
-            drinkNumber.Text = "";
-            drinkImage.ImageUrl = "./pic/未選取" + ".jpg";
+            if (!IsPostBack)
+            {
+                drinkPrice.Text = "";
+                drinkNumber.Text = "";
+                drinkImage.ImageUrl = "./pic/未選取" + ".jpg";
+                for (int i = 0; i < 50; i++)
+                {
+                    cupList.Items.Insert(i, new ListItem("" + (i + 1), "" + (i + 1)));
+                }
+                cupList.SelectedIndex = 0;
+            }
+           
         }
 
         protected void drinkList_SelectedIndexChanged(object sender, EventArgs e)
@@ -25,11 +34,13 @@ namespace web_class1
             {
                 drinkPrice.Text = "";
                 drinkNumber.Text = "";
+                cubBT.Enabled = false;
             }
             else
             {
                 drinkPrice.Text = drinkDetailsView.Rows[0].Cells[1].Text + " 元";
                 drinkNumber.Text = "\t庫存: " + drinkDetailsView.Rows[1].Cells[1].Text +" 個";
+                cubBT.Enabled = true;
             }
         }
 
@@ -46,7 +57,13 @@ namespace web_class1
             {
                 Session["order_id"] = orderDr["order_id"]; 
                 orderBT.Text = orderDr["order_id"] + "號訂單";
-               // orderBT.Enabled = false;
+                orderBT.Enabled = false;
+
+                cupLB.Visible = true;
+                cupList.Visible = true;
+                sweetList.Visible = true;
+                iceList.Visible = true;
+                cubBT.Visible = true;
             }
 
         }
@@ -57,7 +74,33 @@ namespace web_class1
             orderCon.Open();
             SqlCommand orderTableTurncateCmd = new SqlCommand("truncate table orderTable", orderCon);
             orderTableTurncateCmd.ExecuteNonQuery();
+            SqlCommand orderItemTableTurncateCmd = new SqlCommand("truncate table orderItemTable", orderCon);
+            orderItemTableTurncateCmd.ExecuteNonQuery();
             orderBT.Text = "前往訂購";
+            orderBT.Enabled = true;
+
+
+            cupLB.Visible = false;
+            cupList.Visible = false;
+            sweetList.Visible = false;
+            iceList.Visible = false;
+            cubBT.Visible = false;
+            orderItemGridView.Visible = false;
+        }
+
+        protected void cupList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void cubBT_Click(object sender, EventArgs e)
+        {
+            orderItemDataSource.Insert();
+
+            if(!orderItemGridView.Visible)
+            {
+                orderItemGridView.Visible = true;
+            }
         }
     }
 }
