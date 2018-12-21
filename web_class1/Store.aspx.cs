@@ -86,6 +86,7 @@ namespace web_class1
             iceList.Visible = false;
             cubBT.Visible = false;
             orderItemGridView.Visible = false;
+            totalLB.Visible = false;
         }
 
         protected void cupList_SelectedIndexChanged(object sender, EventArgs e)
@@ -100,6 +101,65 @@ namespace web_class1
             if(!orderItemGridView.Visible)
             {
                 orderItemGridView.Visible = true;
+            }
+            totalLB.Visible = true;
+        }
+
+        protected void orderItemGridView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            countTotal();
+        }
+        
+        private void countTotal()
+        {
+            int total = 0;
+            string warnMsg = "";
+            for(int i = 0; i < orderItemGridView.Rows.Count; i++)
+            {
+                if(orderItemGridView.Rows[i].Cells[4].FindControl("subTotalLB") != null)
+                {
+                    total += Convert.ToInt32(((Label)orderItemGridView.Rows[i].Cells[4].FindControl("subTotalLB")).Text);
+                }
+                cupEditCheck(ref warnMsg, i);
+            }
+            totalLB.Text = warnMsg + "總價: " + total + " 元";
+        }
+
+        private void cupEditCheck(ref string msg,int i)
+        {
+            if(orderItemGridView.Rows[i].Cells[1].FindControl("itemCupLB") != null)
+            {
+                using (Label tempCupLB = (Label)orderItemGridView.Rows[i].Cells[1].FindControl("itemCupLB"))
+                {
+                    if(tempCupLB.Text == "0")
+                    {
+                        msg = "錯誤的杯數";
+                        tempCupLB.ForeColor = System.Drawing.Color.Red;
+                    }
+                    else
+                    {
+                        tempCupLB.ForeColor = System.Drawing.Color.Black;
+                    }
+                }
+            }
+        }
+
+        protected void orderItemGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            if(orderItemGridView.Rows.Count == 1)
+            {
+                totalLB.Visible = false;
+            }
+        }
+
+        protected void editCupTB_TextChanged(object sender, EventArgs e)
+        {
+            foreach(char ch in ((TextBox)sender).Text)
+            {
+                if (!Char.IsDigit(ch))
+                {
+                    ((TextBox)sender).Text = "0";
+                }
             }
         }
     }
