@@ -42,6 +42,9 @@
         .auto-style10 {
             background-color: #FFFFFF;
         }
+        .auto-style11 {
+            font-size: large;
+        }
     </style>
 </head>
 <body style="background-position: center center; background-image: url('4eRxg.jpg'); background-repeat: no-repeat; background-attachment: fixed;background-size: cover;">
@@ -193,13 +196,21 @@
                         <SortedDescendingHeaderStyle BackColor="#C2A47B" />
                     </asp:GridView>
                     <asp:Label ID="totalLB" runat="server" style="color: #003300; font-size: xx-large; background-color: #FFFFFF" Text="總價" Visible="False"></asp:Label>
+                    <br />
+                    <asp:Button ID="checkBT" runat="server" CssClass="auto-style11" OnClick="checkBT_Click" Text="確認訂購" Visible="False" />
+                    <asp:Button ID="cancelBT" runat="server" CssClass="auto-style11" OnClick="cancelBT_Click" Text="取消訂購" Visible="False" />
+                    <br />
+                    <asp:Label ID="errorLB" runat="server" ForeColor="Red" style="background-color: #FFFFFF" Text="錯誤提示" Visible="False"></asp:Label>
                 </td>
             </tr>
         </table>
         <br />
         <br />
         <asp:SqlDataSource ID="drinkData" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [drink_id], [drink_name] FROM [drinkTable]"></asp:SqlDataSource>
-        <asp:SqlDataSource ID="drinkDataSelect" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" InsertCommand="INSERT INTO orderTable(order_time, order_phone) VALUES (GETDATE(), @order_phone)" SelectCommand="SELECT [drink_price], [drink_number] FROM [drinkTable] WHERE ([drink_id] = @drink_id)">
+        <asp:SqlDataSource ID="drinkDataSelect" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" InsertCommand="INSERT INTO orderTable(order_time, order_phone) VALUES (GETDATE(), @order_phone)" SelectCommand="SELECT [drink_price], [drink_number] FROM [drinkTable] WHERE ([drink_id] = @drink_id)" DeleteCommand="DELETE FROM orderTable WHERE (order_id = @order_id)">
+            <DeleteParameters>
+                <asp:SessionParameter Name="order_id" SessionField="order_id" />
+            </DeleteParameters>
             <InsertParameters>
                 <asp:SessionParameter Name="order_phone" SessionField="phone" />
             </InsertParameters>
@@ -235,6 +246,71 @@
                 <asp:ControlParameter ControlID="orderItemGridView" Name="drink_id" PropertyName="SelectedValue" />
             </UpdateParameters>
         </asp:SqlDataSource>
+        <asp:SqlDataSource ID="clientDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT user_name FROM userData" UpdateCommand="UPDATE userData SET user_money = @user_money WHERE (user_name = @user_name)">
+            <UpdateParameters>
+                <asp:SessionParameter Name="user_money" SessionField="money" />
+                <asp:SessionParameter Name="user_name" SessionField="name" />
+            </UpdateParameters>
+        </asp:SqlDataSource>
+        <asp:SqlDataSource ID="cancelOrderDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" DeleteCommand="DELETE FROM orderItemTable WHERE (order_id = @order_id)" SelectCommand="SELECT drink_id FROM orderItemTable">
+            <DeleteParameters>
+                <asp:SessionParameter Name="order_id" SessionField="order_id" />
+            </DeleteParameters>
+        </asp:SqlDataSource>
+        <asp:SqlDataSource ID="drinkQtDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT orderItemTable.drink_id, SUM(orderItemTable.num) AS totalNum, drinkTable.drink_name, drinkTable.drink_number FROM orderItemTable INNER JOIN drinkTable ON orderItemTable.drink_id = drinkTable.drink_id WHERE (orderItemTable.order_id = @order_id) GROUP BY orderItemTable.drink_id, drinkTable.drink_name, drinkTable.drink_number" UpdateCommand="UPDATE drinkTable SET drink_number = @drink_number WHERE (drink_id = @drink_id)">
+            <SelectParameters>
+                <asp:SessionParameter Name="order_id" SessionField="order_id" />
+            </SelectParameters>
+            <UpdateParameters>
+                <asp:SessionParameter Name="drink_number" SessionField="updateQtNum" />
+                <asp:SessionParameter Name="drink_id" SessionField="updateQtId" />
+            </UpdateParameters>
+        </asp:SqlDataSource>
+        <asp:GridView ID="qtCheckGridView" runat="server" AutoGenerateColumns="False" BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" DataSourceID="drinkQtDataSource" Visible="False">
+            <Columns>
+                <asp:TemplateField HeaderText="drink_id" SortExpression="drink_id">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("drink_id") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="qtIdLB" runat="server" Text='<%# Bind("drink_id") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="drink_name" SortExpression="drink_name">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("drink_name") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="qtNameLB" runat="server" Text='<%# Bind("drink_name") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="totalNum" SortExpression="totalNum">
+                    <EditItemTemplate>
+                        <asp:Label ID="Label1" runat="server" Text='<%# Eval("totalNum") %>'></asp:Label>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="totalNumLB" runat="server" Text='<%# Bind("totalNum") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="drink_number" SortExpression="drink_number">
+                    <EditItemTemplate>
+                        <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("drink_number") %>'></asp:TextBox>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="checkQtLB" runat="server" Text='<%# Bind("drink_number") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+            <FooterStyle BackColor="#F7DFB5" ForeColor="#8C4510" />
+            <HeaderStyle BackColor="#A55129" Font-Bold="True" ForeColor="White" />
+            <PagerStyle ForeColor="#8C4510" HorizontalAlign="Center" />
+            <RowStyle BackColor="#FFF7E7" ForeColor="#8C4510" />
+            <SelectedRowStyle BackColor="#738A9C" Font-Bold="True" ForeColor="White" />
+            <SortedAscendingCellStyle BackColor="#FFF1D4" />
+            <SortedAscendingHeaderStyle BackColor="#B95C30" />
+            <SortedDescendingCellStyle BackColor="#F1E5CE" />
+            <SortedDescendingHeaderStyle BackColor="#93451F" />
+        </asp:GridView>
     </form>
 </body>
 </html>
