@@ -268,18 +268,18 @@ namespace web_class1
             int qt;
             for (int i = 0; i < qtCheckGridView.Rows.Count; i++)
             {
-                if (qtCheckGridView.Rows[i].Cells[0].FindControl("qtLB") != null &&
+                if (qtCheckGridView.Rows[i].Cells[0].FindControl("qtIdLB") != null &&
                     qtCheckGridView.Rows[i].Cells[2].FindControl("totalNumLB") != null &&
                     qtCheckGridView.Rows[i].Cells[3].FindControl("checkQtLB") != null)
                 {
-                    using (Label qtNameLB = (Label)qtCheckGridView.Rows[i].Cells[0].FindControl("qtLB"),
+                    using (Label qtNameLB = (Label)qtCheckGridView.Rows[i].Cells[0].FindControl("qtIdLB"),
                         totalNumLB = (Label)qtCheckGridView.Rows[i].Cells[2].FindControl("totalNumLB"),
                         checkQtLB = (Label)qtCheckGridView.Rows[i].Cells[3].FindControl("checkQtLB"))
                     {
                         num = Convert.ToInt32(totalNumLB.Text);
                         qt = Convert.ToInt32(checkQtLB.Text);
                         Session["updateQtId"] = Convert.ToInt32(qtNameLB.Text);
-                        Session["upqdateQtNum"] = qt - num;
+                        Session["updateQtNum"] = qt - num;
                         drinkQtDataSource.Update();
                     }
                 }
@@ -290,6 +290,11 @@ namespace web_class1
             drinkDataSelect.Delete();
             cancelOrderDataSource.Delete();
             initial();
+
+        }
+
+        protected void drinkQtDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
+        {
 
         }
     }

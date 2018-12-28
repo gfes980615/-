@@ -257,7 +257,7 @@
                 <asp:SessionParameter Name="order_id" SessionField="order_id" />
             </DeleteParameters>
         </asp:SqlDataSource>
-        <asp:SqlDataSource ID="drinkQtDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT orderItemTable.drink_id, SUM(orderItemTable.num) AS totalNum, drinkTable.drink_name, drinkTable.drink_number FROM orderItemTable INNER JOIN drinkTable ON orderItemTable.drink_id = drinkTable.drink_id WHERE (orderItemTable.order_id = @order_id) GROUP BY orderItemTable.drink_id, drinkTable.drink_name, drinkTable.drink_number" UpdateCommand="UPDATE drinkTable SET drink_number = @drink_number WHERE (drink_id = @drink_id)">
+        <asp:SqlDataSource ID="drinkQtDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT orderItemTable.drink_id, SUM(orderItemTable.num) AS totalNum, drinkTable.drink_name, drinkTable.drink_number FROM orderItemTable INNER JOIN drinkTable ON orderItemTable.drink_id = drinkTable.drink_id WHERE (orderItemTable.order_id = @order_id) GROUP BY orderItemTable.drink_id, drinkTable.drink_name, drinkTable.drink_number" UpdateCommand="UPDATE drinkTable SET drink_number = @drink_number WHERE (drink_id = @drink_id)" OnSelecting="drinkQtDataSource_Selecting">
             <SelectParameters>
                 <asp:SessionParameter Name="order_id" SessionField="order_id" />
             </SelectParameters>
@@ -266,7 +266,7 @@
                 <asp:SessionParameter Name="drink_id" SessionField="updateQtId" />
             </UpdateParameters>
         </asp:SqlDataSource>
-        <asp:GridView ID="qtCheckGridView" runat="server" AutoGenerateColumns="False" BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" DataSourceID="drinkQtDataSource" Visible="False">
+        <asp:GridView ID="qtCheckGridView" runat="server" AutoGenerateColumns="False" BackColor="#DEBA84" BorderColor="#DEBA84" BorderStyle="None" BorderWidth="1px" CellPadding="3" CellSpacing="2" DataSourceID="drinkQtDataSource" Visible="False" style="margin-right: 0px">
             <Columns>
                 <asp:TemplateField HeaderText="drink_id" SortExpression="drink_id">
                     <EditItemTemplate>
